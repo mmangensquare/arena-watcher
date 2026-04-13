@@ -126,6 +126,15 @@ def creator_name(obj: dict) -> str:
     return ""
 
 
+def extract_url(raw_url) -> str:
+    """Arena url field can be a plain string or a dict with 'app'/'api' keys."""
+    if isinstance(raw_url, dict):
+        return raw_url.get("app") or raw_url.get("api") or "#"
+    if isinstance(raw_url, str) and raw_url:
+        return raw_url
+    return "#"
+
+
 def days_left(expiry_iso: str, today: datetime.date) -> int:
     dt = parse_date(expiry_iso)
     if not dt:
@@ -191,7 +200,7 @@ def h(text: str) -> str:
 def change_row(ch: dict, include_status: bool = True) -> str:
     number = ch.get("number", "")
     title = ch.get("title", "") or ""
-    url = ch.get("url") or "#"
+    url = extract_url(ch.get("url"))
     css_cls, badge = cat_from_number(number)
     cname = creator_name(ch)
     sub_date = fmt_date(ch.get("submissionDateTime", ""))
@@ -215,7 +224,7 @@ def change_row(ch: dict, include_status: bool = True) -> str:
 def deviation_row(ch: dict, today: datetime.date) -> str:
     number = ch.get("number", "")
     title = ch.get("title", "") or ""
-    url = ch.get("url") or "#"
+    url = extract_url(ch.get("url"))
     cname = creator_name(ch)
     exp_iso = ch.get("expirationDateTime", "")
     exp_fmt = fmt_date(exp_iso)

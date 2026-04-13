@@ -82,8 +82,6 @@ def fetch_effective_changes(session_id: str, today: datetime.date) -> tuple[list
     seen_dev_guids: set = set()
     offset = 0
     total_scanned = 0
-    logged_sample = False
-
     while True:
         data = arena_get(session_id, "/changes", {
             "lifecycleStatus.type": "EFFECTIVE",
@@ -94,11 +92,6 @@ def fetch_effective_changes(session_id: str, today: datetime.date) -> tuple[list
         if not batch:
             break
         total_scanned += len(batch)
-
-        # Log field names from first result to understand available date fields
-        if not logged_sample and batch:
-            print(f"EFFECTIVE change fields: {list(batch[0].keys())}")
-            logged_sample = True
 
         for ch in batch:
             number = ch.get("number", "").upper()
@@ -272,13 +265,13 @@ def h(text: str) -> str:
             .replace('"', "&quot;"))
 
 
-def change_row(ch: dict, include_status: bool = True) -> str:
+def change_row(ch: dict, include_status: bool = True, date_field: str = "submissionDateTime") -> str:
     number = ch.get("number", "")
     title = ch.get("title", "") or ""
     url = extract_url(ch.get("url"))
     css_cls, badge = cat_from_number(number)
     cname = creator_name(ch)
-    sub_date = fmt_date(ch.get("submissionDateTime", ""))
+    sub_date = fmt_date(ch.get(date_field, "") or ch.get("submissionDateTime", ""))
     status = (ch.get("lifecycleStatus") or {}).get("type", "SUBMITTED")
     status_cls = f"status-{status.lower()}"
 
@@ -472,7 +465,7 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
         "No changes pending longer than 7 days",
     )
 
-    effective_week_rows = [change_row(ch, include_status=False) for ch in effective_this_week]
+    effective_week_rows = [change_row(ch, include_status=False, date_field="effectiveDateTime") for ch in effective_this_week]
     effective_week_body = table_or_empty(
         effective_week_rows,
         ["Number", "Title", "Type", "Submitted By", "Approved"],

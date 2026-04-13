@@ -69,14 +69,11 @@ def fetch_submitted_changes(session_id: str) -> list:
 
 
 def fetch_effective_deviations(session_id: str) -> list:
-    """Fetch EFFECTIVE deviations.
-
-    Arena sorts changes by number ascending. 'DEV' sorts before 'ECO'/'PCO'
-    alphabetically, so all DEVs appear in the first pages of any status query.
-    We fetch up to 3 pages and stop once we've moved past the DEV prefix.
-    """
+    """Fetch EFFECTIVE deviations across all pages."""
     deviations = []
-    for offset in [0, 50, 100]:
+    offset = 0
+    page = 0
+    while True:
         data = arena_get(session_id, "/changes", {
             "lifecycleStatus.type": "EFFECTIVE",
             "limit": 50,
@@ -85,13 +82,20 @@ def fetch_effective_deviations(session_id: str) -> list:
         batch = data.get("results", [])
         if not batch:
             break
+        # Log first page so we can see the sort order
+        if page == 0:
+            sample = [ch.get("number", "") for ch in batch[:5]]
+            print(f"EFFECTIVE page 0 sample numbers: {sample}")
         for ch in batch:
             if ch.get("number", "").upper().startswith("DEV-"):
                 deviations.append(ch)
-        # If every item in the batch sorts past 'DEV-', no more DEVs ahead
-        if all(ch.get("number", "").upper() > "DEV-ZZZZZZ" for ch in batch):
-            break
         if len(batch) < 50:
+            break
+        offset += 50
+        page += 1
+        # Safety cap — stop after 500 results if no end in sight
+        if offset >= 500:
+            print("Warning: reached 500 EFFECTIVE changes without exhausting results")
             break
     print(f"Fetched {len(deviations)} effective deviations")
     return deviations

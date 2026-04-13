@@ -69,11 +69,21 @@ def fetch_submitted_changes(session_id: str) -> list:
 
 
 def fetch_items_this_week(session_id: str) -> list:
-    """Fetch items created in the last 7 days using Arena date filter."""
-    cutoff = (datetime.now(timezone.utc) - timedelta(days=7)).strftime("%Y-%m-%dT00:00:00Z")
+    """Fetch items created in the last 7 days using Arena criteria filter."""
+    import json
+    today = datetime.now(timezone.utc)
+    week_ago = today - timedelta(days=7)
+    criteria = [[{
+        "attribute": "creationDateTime",
+        "operator": "IS_BETWEEN",
+        "value": [
+            week_ago.strftime("%Y-%m-%dT00:00:00Z"),
+            today.strftime("%Y-%m-%dT23:59:59Z"),
+        ],
+    }]]
     try:
         data = arena_get(session_id, "/items", {
-            "createdDateTime>": cutoff,
+            "criteria": json.dumps(criteria),
             "limit": 50,
             "offset": 0,
         })
@@ -81,7 +91,7 @@ def fetch_items_this_week(session_id: str) -> list:
         print(f"Fetched {len(items)} items created this week")
         return items
     except Exception as e:
-        print(f"Warning: items date filter not supported ({e})", file=sys.stderr)
+        print(f"Warning: items criteria filter failed: {e}", file=sys.stderr)
         return []
 
 

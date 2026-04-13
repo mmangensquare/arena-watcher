@@ -88,6 +88,8 @@ def fetch_items_this_week(session_id: str) -> list:
             "offset": 0,
         })
         items = data.get("results", [])
+        # Sort newest first (API has no sort parameter)
+        items.sort(key=lambda i: i.get("creationDateTime") or "", reverse=True)
         print(f"Fetched {len(items)} items created this week")
         return items
     except Exception as e:
@@ -271,10 +273,11 @@ def item_row(item: dict) -> str:
     phase = (item.get("lifecyclePhase") or {}).get("name", "")
     created = fmt_date(item.get("creationDateTime") or item.get("createdDateTime", ""))
     cname = creator_name(item)
+    url = extract_url(item.get("url"))
 
     return (
         f'<tr>'
-        f'<td class="num-link" style="font-weight:600;color:#4f46e5">{h(number)}</td>'
+        f'<td><a class="num-link" href="{h(url)}" target="_blank">{h(number)}</a></td>'
         f'<td>{h(name)}</td>'
         f'<td><span class="cat cat-other" style="font-size:.7rem">{h(cat_name)}</span></td>'
         f'<td class="creator">{h(cname)}</td>'

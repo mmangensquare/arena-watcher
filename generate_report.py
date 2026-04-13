@@ -68,15 +68,22 @@ def fetch_submitted_changes(session_id: str) -> list:
     return changes
 
 
-def fetch_effective_deviations(session_id: str) -> list:
-    """Fetch all EFFECTIVE deviations by scanning all EFFECTIVE changes.
+def fetch_effective_changes(session_id: str, today: datetime.date) -> tuple[list, list]:
+    """Scan all EFFECTIVE changes, returning (deviations, became_effective_this_week).
 
-    Arena has no filter for DEV category, so we page through all EFFECTIVE
-    results until exhausted and collect any change whose number starts with DEV-.
+    Arena has no category filter for changes, so we page through all EFFECTIVE
+    results. We collect:
+      - deviations: any change whose number starts with DEV-
+      - effective_this_week: any change that became effective in the last 7 days
     """
-    deviations = []
+    week_ago = today - timedelta(days=7)
+    deviations: list = []
+    effective_this_week: list = []
+    seen_dev_guids: set = set()
     offset = 0
     total_scanned = 0
+    logged_sample = False
+
     while True:
         data = arena_get(session_id, "/changes", {
             "lifecycleStatus.type": "EFFECTIVE",
@@ -87,14 +94,37 @@ def fetch_effective_deviations(session_id: str) -> list:
         if not batch:
             break
         total_scanned += len(batch)
+
+        # Log field names from first result to understand available date fields
+        if not logged_sample and batch:
+            print(f"EFFECTIVE change fields: {list(batch[0].keys())}")
+            logged_sample = True
+
         for ch in batch:
-            if ch.get("number", "").upper().startswith("DEV-"):
+            number = ch.get("number", "").upper()
+            guid = ch.get("guid")
+
+            if number.startswith("DEV-") and guid not in seen_dev_guids:
                 deviations.append(ch)
+                seen_dev_guids.add(guid)
+
+            # Determine when the change became effective
+            # Try effectiveDateTime first, fall back to submissionDateTime
+            eff_dt_str = ch.get("effectiveDateTime") or ch.get("submissionDateTime") or ""
+            eff_dt = parse_date(eff_dt_str)
+            if eff_dt and week_ago < eff_dt.date() <= today:
+                effective_this_week.append(ch)
+
         if len(batch) < 50:
-            break  # reached the last page
+            break
         offset += 50
-    print(f"Fetched {len(deviations)} effective deviations (scanned {total_scanned} EFFECTIVE changes)")
-    return deviations
+
+    print(
+        f"Fetched {len(deviations)} effective deviations, "
+        f"{len(effective_this_week)} became effective this week "
+        f"(scanned {total_scanned} EFFECTIVE changes)"
+    )
+    return deviations, effective_this_week
 
 
 def fetch_items_this_week(session_id: str) -> list:
@@ -402,11 +432,13 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
     submitted_week = s["submitted_week"]
     pending_old = s["pending_old"]
     deviations = s["deviations"]
+    effective_this_week = s.get("effective_this_week", [])
 
     stat_today = len(submitted_today)
     stat_week = len(submitted_week) + len(submitted_today)
     stat_devs = len(deviations)
     stat_expiring = sum(1 for d in deviations if days_left(d.get("expirationDateTime", ""), today) <= 30)
+    stat_effective_week = len(effective_this_week)
     stat_items = len(items)
 
     gen_date = today.strftime("%B %-d, %Y")
@@ -438,6 +470,13 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
         pending_rows,
         ["Number", "Title", "Type", "Submitted By", "Submitted"],
         "No changes pending longer than 7 days",
+    )
+
+    effective_week_rows = [change_row(ch, include_status=False) for ch in effective_this_week]
+    effective_week_body = table_or_empty(
+        effective_week_rows,
+        ["Number", "Title", "Type", "Submitted By", "Approved"],
+        "No changes became effective this week",
     )
 
     if items:
@@ -518,6 +557,15 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
 
 <div class="section">
   <div class="section-h">
+    <span class="icon">&#x2705;</span>
+    <h2>Became Effective This Week</h2>
+    <span class="badge {'ok' if stat_effective_week == 0 else ''}">{stat_effective_week} change{'s' if stat_effective_week != 1 else ''}</span>
+  </div>
+  {effective_week_body}
+</div>
+
+<div class="section">
+  <div class="section-h">
     <span class="icon">&#x26A0;&#xFE0F;</span>
     <h2>Active Deviations</h2>
     <span class="badge {dev_badge_cls}">{stat_devs} active · {stat_expiring} expiring soon</span>
@@ -561,10 +609,11 @@ def main() -> None:
 
     session_id = login()
     changes = fetch_submitted_changes(session_id)
-    effective_devs = fetch_effective_deviations(session_id)
+    effective_devs, effective_this_week = fetch_effective_changes(session_id, today)
     items = fetch_items_this_week(session_id)
 
     data = classify(changes, effective_devs, today)
+    data["effective_this_week"] = effective_this_week
 
     stat_today = len(data["submitted_today"])
     stat_week = len(data["submitted_week"]) + stat_today

@@ -420,7 +420,6 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.78rem;border-top:
 
 
 def build_html(data: dict, items: list, today: datetime.date) -> str:
-    print(f"DEBUG build_html: received {len(items)} items, truthy={bool(items)}")
     s = data
     submitted_today = s["submitted_today"]
     submitted_week = s["submitted_week"]
@@ -617,7 +616,6 @@ def main() -> None:
         if days_left(d.get("expirationDateTime", ""), today) <= 30
     )
 
-    print(f"DEBUG main: passing {len(items)} items to build_html")
     html = build_html(data, items, today)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         f.write(html)

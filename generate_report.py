@@ -68,6 +68,35 @@ def fetch_submitted_changes(session_id: str) -> list:
     return changes
 
 
+def fetch_effective_deviations(session_id: str) -> list:
+    """Fetch EFFECTIVE deviations.
+
+    Arena sorts changes by number ascending. 'DEV' sorts before 'ECO'/'PCO'
+    alphabetically, so all DEVs appear in the first pages of any status query.
+    We fetch up to 3 pages and stop once we've moved past the DEV prefix.
+    """
+    deviations = []
+    for offset in [0, 50, 100]:
+        data = arena_get(session_id, "/changes", {
+            "lifecycleStatus.type": "EFFECTIVE",
+            "limit": 50,
+            "offset": offset,
+        })
+        batch = data.get("results", [])
+        if not batch:
+            break
+        for ch in batch:
+            if ch.get("number", "").upper().startswith("DEV-"):
+                deviations.append(ch)
+        # If every item in the batch sorts past 'DEV-', no more DEVs ahead
+        if all(ch.get("number", "").upper() > "DEV-ZZZZZZ" for ch in batch):
+            break
+        if len(batch) < 50:
+            break
+    print(f"Fetched {len(deviations)} effective deviations")
+    return deviations
+
+
 def fetch_items_this_week(session_id: str) -> list:
     """Fetch items created in the last 7 days using Arena criteria filter."""
     import json
@@ -159,18 +188,21 @@ def days_left(expiry_iso: str, today: datetime.date) -> int:
 # Classify changes
 # ---------------------------------------------------------------------------
 
-def classify(changes: list, today: datetime.date) -> dict:
+def classify(changes: list, effective_devs: list, today: datetime.date) -> dict:
     week_ago = today - timedelta(days=7)
-    submitted_today, submitted_week, pending_old, deviations = [], [], [], []
-    today_str = today.isoformat()
+    submitted_today, submitted_week, pending_old = [], [], []
+    # Seed deviations from effective list; submitted DEVs will be merged below
+    seen_guids = {ch.get("guid") for ch in effective_devs}
+    deviations = list(effective_devs)
 
     for ch in changes:
         sub_dt = ch.get("submissionDateTime", "")
         cat_name = (ch.get("category") or {}).get("name", "")
         is_dev = "deviation" in cat_name.lower() or ch.get("number", "").upper().startswith("DEV-")
 
-        if is_dev:
+        if is_dev and ch.get("guid") not in seen_guids:
             deviations.append(ch)
+            seen_guids.add(ch.get("guid"))
 
         if not sub_dt:
             continue
@@ -186,7 +218,7 @@ def classify(changes: list, today: datetime.date) -> dict:
         else:
             pending_old.append(ch)
 
-    # Sort deviations by expiration ascending
+    # Sort deviations by expiration ascending (soonest first)
     deviations.sort(key=lambda d: d.get("expirationDateTime") or "9999")
 
     return {
@@ -245,10 +277,13 @@ def deviation_row(ch: dict, today: datetime.date) -> str:
     status = (ch.get("lifecycleStatus") or {}).get("type", "SUBMITTED")
     status_cls = f"status-{status.lower()}"
 
-    if dl < 7:
+    if dl < 0:
         exp_cls = "expire-urgent"
-        dl_str = f"{dl} days" if dl >= 0 else "EXPIRED"
-    elif dl <= 14:
+        dl_str = "EXPIRED"
+    elif dl <= 10:
+        exp_cls = "expire-urgent"
+        dl_str = f"{dl} day{'s' if dl != 1 else ''}"
+    elif dl <= 30:
         exp_cls = "expire-warn"
         dl_str = f"{dl} days"
     else:
@@ -371,7 +406,7 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
     stat_today = len(submitted_today)
     stat_week = len(submitted_week) + len(submitted_today)
     stat_devs = len(deviations)
-    stat_expiring = sum(1 for d in deviations if days_left(d.get("expirationDateTime", ""), today) <= 14)
+    stat_expiring = sum(1 for d in deviations if days_left(d.get("expirationDateTime", ""), today) <= 30)
     stat_items = len(items)
 
     gen_date = today.strftime("%B %-d, %Y")
@@ -459,7 +494,7 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
   </div>
   <div class="stat red">
     <div class="num">{stat_expiring}</div>
-    <div class="lbl">Expiring &lt; 14 Days</div>
+    <div class="lbl">Expiring &lt; 30 Days</div>
   </div>
 </div>
 
@@ -488,7 +523,7 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
     <span class="badge {dev_badge_cls}">{stat_devs} active · {stat_expiring} expiring soon</span>
   </div>
   {dev_body}
-  <div class="note">Sorted by expiration date. Red = &lt;7 days, amber = 7–14 days, green = &gt;14 days.</div>
+  <div class="note">Sorted by expiration date. Red = &lt;10 days (urgent), amber = 10–30 days (warning), green = &gt;30 days.</div>
 </div>
 
 <div class="section">
@@ -526,16 +561,17 @@ def main() -> None:
 
     session_id = login()
     changes = fetch_submitted_changes(session_id)
+    effective_devs = fetch_effective_deviations(session_id)
     items = fetch_items_this_week(session_id)
 
-    data = classify(changes, today)
+    data = classify(changes, effective_devs, today)
 
     stat_today = len(data["submitted_today"])
     stat_week = len(data["submitted_week"]) + stat_today
     stat_devs = len(data["deviations"])
     stat_expiring = sum(
         1 for d in data["deviations"]
-        if days_left(d.get("expirationDateTime", ""), today) <= 14
+        if days_left(d.get("expirationDateTime", ""), today) <= 30
     )
 
     html = build_html(data, items, today)

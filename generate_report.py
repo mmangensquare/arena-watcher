@@ -69,45 +69,14 @@ def fetch_submitted_changes(session_id: str) -> list:
 
 
 def fetch_effective_deviations(session_id: str) -> list:
-    """Fetch all EFFECTIVE deviations.
+    """Fetch all EFFECTIVE deviations by scanning all EFFECTIVE changes.
 
-    First tries filtering by number prefix 'DEV-' (fast, if Arena supports it).
-    Falls back to full scan with pagination if the prefix filter returns nothing
-    or an error.
+    Arena has no filter for DEV category, so we page through all EFFECTIVE
+    results until exhausted and collect any change whose number starts with DEV-.
     """
-    def _fetch_with_number_filter() -> list | None:
-        """Try querying EFFECTIVE changes with number=DEV- prefix filter."""
-        try:
-            deviations = []
-            for offset in [0, 50, 100]:
-                data = arena_get(session_id, "/changes", {
-                    "lifecycleStatus.type": "EFFECTIVE",
-                    "number": "DEV-",
-                    "limit": 50,
-                    "offset": offset,
-                })
-                batch = data.get("results", [])
-                # Verify results actually have DEV prefix (API may ignore the filter)
-                dev_batch = [ch for ch in batch if ch.get("number", "").upper().startswith("DEV-")]
-                if batch and not dev_batch:
-                    # API returned results but none are DEVs — filter not working
-                    return None
-                deviations.extend(dev_batch)
-                if len(batch) < 50:
-                    break
-            return deviations
-        except Exception:
-            return None
-
-    result = _fetch_with_number_filter()
-    if result is not None:
-        print(f"Fetched {len(result)} effective deviations (number filter)")
-        return result
-
-    # Fallback: full scan, stop when total results are exhausted
-    print("Number filter ineffective, scanning all EFFECTIVE changes…")
     deviations = []
     offset = 0
+    total_scanned = 0
     while True:
         data = arena_get(session_id, "/changes", {
             "lifecycleStatus.type": "EFFECTIVE",
@@ -117,13 +86,14 @@ def fetch_effective_deviations(session_id: str) -> list:
         batch = data.get("results", [])
         if not batch:
             break
+        total_scanned += len(batch)
         for ch in batch:
             if ch.get("number", "").upper().startswith("DEV-"):
                 deviations.append(ch)
         if len(batch) < 50:
-            break  # last page — we've seen everything
+            break  # reached the last page
         offset += 50
-    print(f"Fetched {len(deviations)} effective deviations (full scan)")
+    print(f"Fetched {len(deviations)} effective deviations (scanned {total_scanned} EFFECTIVE changes)")
     return deviations
 
 

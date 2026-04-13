@@ -84,6 +84,7 @@ def fetch_items_this_week(session_id: str) -> list:
     try:
         data = arena_get(session_id, "/items", {
             "criteria": json.dumps(criteria),
+            "responseview": "full",
             "limit": 50,
             "offset": 0,
         })

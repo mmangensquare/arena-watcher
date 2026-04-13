@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arena Daily Watcher</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;line-height:1.5}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.topbar h1{font-size:1.05rem;font-weight:700;color:#1e293b;white-space:nowrap}
+.topbar .subtitle{font-size:.8rem;color:#64748b}
+.topbar .refresh{margin-left:auto;font-size:.78rem;color:#94a3b8}
+.container{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat .num{font-size:2rem;font-weight:700;line-height:1}
+.stat .lbl{font-size:.78rem;color:#64748b;margin-top:4px}
+.stat.blue .num{color:#3b82f6}
+.stat.green .num{color:#10b981}
+.stat.amber .num{color:#f59e0b}
+.stat.red .num{color:#ef4444}
+.section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.05);overflow:hidden}
+.section-h{padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f1f5f9}
+.section-h .icon{font-size:1rem}
+.section-h h2{font-size:.9rem;font-weight:700;color:#1e293b}
+.section-h .badge{margin-left:auto;background:#f1f5f9;border-radius:20px;padding:2px 10px;font-size:.72rem;font-weight:600;color:#64748b}
+.section-h .badge.hot{background:#fef2f2;color:#dc2626}
+.section-h .badge.warn{background:#fffbeb;color:#b45309}
+.section-h .badge.ok{background:#f0fdf4;color:#15803d}
+.empty{padding:18px;text-align:center;color:#94a3b8;font-size:.85rem}
+table{width:100%;border-collapse:collapse}
+th{background:#f8fafc;padding:9px 14px;text-align:left;font-weight:600;font-size:.73rem;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #e2e8f0;color:#64748b}
+td{padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:.84rem;color:#334155;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.num-link{font-weight:600;color:#4f46e5;text-decoration:none;font-size:.82rem}
+.num-link:hover{text-decoration:underline}
+.cat{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600;white-space:nowrap}
+.cat-eco{background:#ede9fe;color:#5b21b6}
+.cat-pco{background:#e0f2fe;color:#0369a1}
+.cat-dev{background:#fef3c7;color:#92400e}
+.cat-3pp{background:#f0fdf4;color:#15803d}
+.cat-other{background:#f1f5f9;color:#475569}
+.status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+.status-submitted{background:#dbeafe;color:#1d4ed8}
+.status-effective{background:#dcfce7;color:#15803d}
+.status-open{background:#f1f5f9;color:#475569}
+.status-locked{background:#fef9c3;color:#713f12}
+.expire-urgent{color:#dc2626;font-weight:700}
+.expire-warn{color:#d97706;font-weight:600}
+.expire-ok{color:#15803d}
+.creator{color:#64748b;font-size:.8rem}
+.date{color:#94a3b8;font-size:.78rem;white-space:nowrap}
+.note{padding:12px 18px;font-size:.78rem;color:#94a3b8;border-top:1px solid #f1f5f9;background:#fafafa}
+footer{text-align:center;padding:20px;color:#94a3b8;font-size:.78rem;border-top:1px solid #e2e8f0;margin-top:12px}
+@media(max-width:768px){.stats-row{grid-template-columns:repeat(2,1fr)}.topbar{padding:10px 14px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <h1>&#x1F4E1; Arena Daily Watcher</h1>
+    <div class="subtitle">Change orders, submissions &amp; deviation tracking</div>
+  </div>
+  <div class="refresh">Generated: <strong id="gen-date">April 13, 2026</strong></div>
+</div>
+
+<div class="container">
+
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat blue">
+    <div class="num" id="stat-submitted-today">0</div>
+    <div class="lbl">Submitted Today</div>
+  </div>
+  <div class="stat green">
+    <div class="num" id="stat-submitted-week">6</div>
+    <div class="lbl">Submitted This Week</div>
+  </div>
+  <div class="stat amber">
+    <div class="num" id="stat-deviations">1</div>
+    <div class="lbl">Active Deviations</div>
+  </div>
+  <div class="stat red">
+    <div class="num" id="stat-expiring">1</div>
+    <div class="lbl">Expiring &lt; 14 Days</div>
+  </div>
+</div>
+
+<!-- SUBMITTED TODAY -->
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x2705;</span>
+    <h2>Submitted Today</h2>
+    <span class="badge ok" id="badge-today">0 changes</span>
+  </div>
+  <div id="submitted-today-body">
+    <div class="empty">No changes submitted today (April 13, 2026)</div>
+  </div>
+</div>
+
+<!-- SUBMITTED THIS WEEK -->
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F4CB;</span>
+    <h2>Submitted This Week</h2>
+    <span class="badge" id="badge-week">6 changes</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Submitted</th><th>Status</th></tr>
+    </thead>
+    <tbody id="submitted-week-body">
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/CUEXBGEB8J25O6LQFR40" target="_blank">ECO-007987</a></td>
+        <td>R2-B3/B4: Update Cable Tie Quantity</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Matt Mangen</td>
+        <td class="date">Apr 7, 2026</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/Q8SBPUSPMXGJ2KZ4T5FR" target="_blank">PCO-001136</a></td>
+        <td>X2c Correction: Add M-FMT-0492 to Bran Replacement Shippers</td>
+        <td><span class="cat cat-pco">PCO</span></td>
+        <td class="creator">Matt Stofleth</td>
+        <td class="date">Apr 7, 2026</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/5N7Q49741CVYHZEJ8KSS" target="_blank">ECO-007988</a></td>
+        <td>S3b: ORT Plan Update</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Matt Stofleth</td>
+        <td class="date">Apr 7, 2026</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/7P9S6B963EX0J1GL9I0X" target="_blank">ECO-007992</a></td>
+        <td>X2c: P-Stand Protective Film Update</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Matt Stofleth</td>
+        <td class="date">Apr 8, 2026</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/SAUDRWUROZIL4M16U203" target="_blank">DEV-000654</a></td>
+        <td>T3a: Rework Config 1 Overspray Units (FG Only)</td>
+        <td><span class="cat cat-dev">DEV</span></td>
+        <td class="creator">Michael Imperial</td>
+        <td class="date">Apr 9, 2026</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL47Q8NSGJAJ" target="_blank">ECO-007997</a></td>
+        <td>T2b: PRV4 - SPE Board, Security Cage, MLB Pin Connector Substitute</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Michael Imperial</td>
+        <td class="date">Apr 10, 2026</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- EXPIRING DEVIATIONS -->
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x26A0;&#xFE0F;</span>
+    <h2>Active Deviations — Expiring Soon</h2>
+    <span class="badge warn" id="badge-deviations">1 active</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Number</th><th>Title</th><th>Status</th><th>Created By</th><th>Expiration</th><th>Days Left</th></tr>
+    </thead>
+    <tbody id="deviations-body">
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/SAUDRWUROZIL4M16U203" target="_blank">DEV-000654</a></td>
+        <td>T3a: Rework Config 1 Overspray Units (FG Only)</td>
+        <td><span class="status status-submitted">Submitted</span></td>
+        <td class="creator">Michael Imperial</td>
+        <td class="date">Apr 24, 2026</td>
+        <td><span class="expire-warn">11 days</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note">Showing deviations expiring within 30 days. Expired and completed deviations are excluded.</div>
+</div>
+
+<!-- RECENTLY SUBMITTED (OLDER) -->
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F550;</span>
+    <h2>Still Pending Approval</h2>
+    <span class="badge">Submitted &gt; 7 days ago</span>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Submitted</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL47Q8NSU48H" target="_blank">ECO-007902</a></td>
+        <td>W3: Cosmetic Spec Release</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Miguel Gomez</td>
+        <td class="date">Mar 6, 2026</td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/4M6P38630BUXGYDIC934" target="_blank">ECO-007936</a></td>
+        <td>K1a Proto: Build Exit ECO</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Michael Imperial</td>
+        <td class="date">Apr 9, 2026 (created Mar 24)</td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/0I2LZ42ZW7QTCU9E6LTX" target="_blank">PCO-001131</a></td>
+        <td>K1a: Initial SKU Release</td>
+        <td><span class="cat cat-pco">PCO</span></td>
+        <td class="creator">Michael Imperial</td>
+        <td class="date">Apr 9, 2026 (created Mar 31)</td>
+      </tr>
+      <tr>
+        <td><a class="num-link" href="https://app.bom.com/BTDWAFDA7I14N5KPFY5O" target="_blank">ECO-007983</a></td>
+        <td>K1a EVT: Update MLB M-MCO-0060 Drawing</td>
+        <td><span class="cat cat-eco">ECO</span></td>
+        <td class="creator">Michael Imperial</td>
+        <td class="date">Apr 3, 2026</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ITEMS NOTE -->
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F4E6;</span>
+    <h2>Items Created Today</h2>
+    <span class="badge">API Limitation</span>
+  </div>
+  <div class="empty" style="padding:20px">
+    The Arena API does not support filtering items by creation date. Items created today will appear in change orders above once an ECO/PCO is submitted against them.
+  </div>
+</div>
+
+</div>
+
+<footer>Arena Daily Watcher &bull; Powered by Arena MCP + Claude Code &bull; Refreshed daily at 8 AM</footer>
+
+</body>
+</html>

@@ -44,6 +44,9 @@ tr:hover td{background:#f8fafc}
 .cat-other{background:#f1f5f9;color:#475569}
 .status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
 .status-submitted{background:#dbeafe;color:#1d4ed8}
+.status-effective{background:#dcfce7;color:#15803d}
+.status-open{background:#f1f5f9;color:#475569}
+.status-locked{background:#fef9c3;color:#713f12}
 .expire-urgent{color:#dc2626;font-weight:700}
 .expire-warn{color:#d97706;font-weight:600}
 .expire-ok{color:#15803d}
@@ -55,265 +58,171 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.78rem;border-top:
 </style>
 </head>
 <body>
-
 <div class="topbar">
-  <h1>Arena Daily Watcher</h1>
-  <span class="subtitle">Change order activity &amp; deviation tracker</span>
-  <span class="refresh">Updated Apr 14, 2026</span>
+  <div>
+    <h1>&#x1F4E1; Arena Daily Watcher</h1>
+    <div class="subtitle">Change orders, submissions &amp; deviation tracking</div>
+  </div>
+  <div class="refresh">Generated: <strong>April 15, 2026</strong></div>
 </div>
 
 <div class="container">
 
-  <!-- Stats Row -->
-  <div class="stats-row">
-    <div class="stat blue">
-      <div class="num">0</div>
-      <div class="lbl">Submitted Today</div>
-    </div>
-    <div class="stat green">
-      <div class="num">6</div>
-      <div class="lbl">Submitted This Week</div>
-    </div>
-    <div class="stat amber">
-      <div class="num">1</div>
-      <div class="lbl">Active Deviations</div>
-    </div>
-    <div class="stat red">
-      <div class="num">1</div>
-      <div class="lbl">Expiring &le;14 Days</div>
-    </div>
+<div class="stats-row">
+  <div class="stat blue">
+    <div class="num">0</div>
+    <div class="lbl">Submitted Today</div>
   </div>
+  <div class="stat green">
+    <div class="num">3</div>
+    <div class="lbl">Submitted This Week</div>
+  </div>
+  <div class="stat amber">
+    <div class="num">6</div>
+    <div class="lbl">Active Deviations</div>
+  </div>
+  <div class="stat red">
+    <div class="num">0</div>
+    <div class="lbl">Expiring &lt; 30 Days</div>
+  </div>
+</div>
 
-  <!-- Submitted Today -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">&#128197;</span>
-      <h2>Submitted Today</h2>
-      <span class="badge">0</span>
-    </div>
-    <div class="empty">No changes submitted today.</div>
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x2705;</span>
+    <h2>Submitted Today</h2>
+    <span class="badge ok">0 changes</span>
   </div>
-
-  <!-- Submitted This Week -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">&#128336;</span>
-      <h2>Submitted This Week</h2>
-      <span class="badge">6</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Submitted</th>
-          <th>Creator</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/HZJ2GLJGDO7ATBQVJDVU" target="_blank">ECO-008002</a></td>
-          <td>B4 MP: Hashboard Production Release and BOM Update</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-          <td><span class="creator">Brandon Gatlin</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/R9TCQVTQNYHK3L05TPEZ" target="_blank">ECO-008001</a></td>
-          <td>K1a EVT: Drawing &amp; Sourcing Updates - Taiteng Coin Cell Batteries</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/SAUDRWUROZIL4M16U203" target="_blank">DEV-000654</a></td>
-          <td>T3a: Rework Config 1 Overspray Units (FG Only)</td>
-          <td><span class="cat cat-dev">DEV</span></td>
-          <td><span class="date">Apr 9, 2026</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/0I2LZ42ZW7QTCU9E6LTX" target="_blank">PCO-001131</a></td>
-          <td>K1a: Initial SKU Release</td>
-          <td><span class="cat cat-pco">PCO</span></td>
-          <td><span class="date">Apr 9, 2026</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/4M6P38630BUXGYDIC934" target="_blank">ECO-007936</a></td>
-          <td>K1a Proto: Build Exit ECO</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="date">Apr 9, 2026</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/5N7Q49741CVYHZEJ8KSS" target="_blank">ECO-007988</a></td>
-          <td>S3b: ORT Plan Update</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="date">Apr 7, 2026</span></td>
-          <td><span class="creator">Matt Stofleth</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pending Old -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">&#9200;</span>
-      <h2>Pending &gt;7 Days</h2>
-      <span class="badge warn">1</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Submitted</th>
-          <th>Creator</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/BTDWAFDA7I14N5KPFY5O" target="_blank">ECO-007983</a></td>
-          <td>K1a EVT: Update MLB M-MCO-0060 Drawing</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="date">Apr 3, 2026</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Deviations -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">&#9888;&#65039;</span>
-      <h2>Active Deviations</h2>
-      <span class="badge warn">1 active &mdash; 1 expiring &le;14 days</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Title</th>
-          <th>Submitted</th>
-          <th>Expires</th>
-          <th>Days Left</th>
-          <th>Creator</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/SAUDRWUROZIL4M16U203" target="_blank">DEV-000654</a></td>
-          <td>T3a: Rework Config 1 Overspray Units (FG Only)</td>
-          <td><span class="date">Apr 9, 2026</span></td>
-          <td><span class="date">Apr 24, 2026</span></td>
-          <td><span class="expire-warn">10 days</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Items Created This Week -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">&#128195;</span>
-      <h2>Items Created This Week</h2>
-      <span class="badge">10</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Lifecycle</th>
-          <th>Created</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E6ABAJX" target="_blank">M-PLT-0333</a></td>
-          <td>Pallet - X2c - JP - 1150 x 900 x 153 - Hardwood</td>
-          <td><span class="cat cat-other">Packaging</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 14, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBFGGLM" target="_blank">M-PLT-0332</a></td>
-          <td>Pallet - X2c - US / CA / UK / EU - 1150 x 900 x 131 - Hardwood</td>
-          <td><span class="cat cat-other">Packaging</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 14, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/0I2LZ42ZW7QYHUMQ3DVE" target="_blank">M-PRM-1458</a></td>
-          <td>MMK - Cashier's Guide - Bitcoin - US - 2026</td>
-          <td><span class="cat cat-other">Promotional Material</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTLP2DXI" target="_blank">M-PRM-1457</a></td>
-          <td>MMK - Decal 2 - Bitcoin - US - 2026</td>
-          <td><span class="cat cat-other">Promotional Material</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VZCN9I" target="_blank">M-PRM-1456</a></td>
-          <td>MMK - Decal 1 - Bitcoin - US - 2026</td>
-          <td><span class="cat cat-other">Promotional Material</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/L3N6KPNKHSBJ2F7BP5LV" target="_blank">M-PRM-1455</a></td>
-          <td>MMK - Table Tent - Bitcoin - US - 2026</td>
-          <td><span class="cat cat-other">Promotional Material</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/5N7Q49741CV3MZRVA3LG" target="_blank">A-SKU-0957</a></td>
-          <td>Merchant Marketing Kit - Bitcoin - US - 2026</td>
-          <td><span class="cat cat-other">FG Square</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/5N7Q49741CV3MZRVA5N2" target="_blank">A-CTN-0961</a></td>
-          <td>Merchant Marketing Kit - Bitcoin - US - 2026 - Master Ctn (x200)</td>
-          <td><span class="cat cat-other">Carton</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/FXH0EJHEBM5DW915LNVT" target="_blank">E-ICS-0940</a></td>
-          <td>IC, PD CTLR, USB TYP-C, CSP-16</td>
-          <td><span class="cat cat-other">IC</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL4CV804LC30" target="_blank">E-ICS-0939</a></td>
-          <td>IC, CURR SENSE, 1 CIRCUIT, SC70-6</td>
-          <td><span class="cat cat-other">IC</span></td>
-          <td><span class="date">Unreleased</span></td>
-          <td><span class="date">Apr 13, 2026</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="note">Mon Apr 13 &ndash; Tue Apr 14, 2026 &middot; sorted newest first</div>
-  </div>
+  <div class="empty">No changes submitted today (April 15, 2026)</div>
 
 </div>
 
-<footer>Arena Daily Watcher &middot; Generated Apr 14, 2026 &middot; Data from Arena PLM</footer>
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F4CB;</span>
+    <h2>Submitted This Week</h2>
+    <span class="badge warn">3 changes</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Submitted</th><th>Status</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BUXGYDIC934" target="_blank">ECO-007936</a></td><td>K1a Proto: Build Exit ECO</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 9, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/0I2LZ42ZW7QTCU9E6LTX" target="_blank">PCO-001131</a></td><td>K1a: Initial SKU Release</td><td><span class="cat cat-pco">PCO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 9, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/6O8R5A852DWZI0FK7FU5" target="_blank">PCO-001141</a></td><td>X2c Accessories PKG: Pricing Doc Update</td><td><span class="cat cat-pco">PCO</span></td><td class="creator">Matt Stofleth</td><td class="date">Apr 14, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+</tbody></table>
 
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x2705;</span>
+    <h2>Became Effective This Week</h2>
+    <span class="badge ">12 changes</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Approved</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL47Q8NSU48H" target="_blank">ECO-007902</a></td><td>W3: Cosmetic Spec Release</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Miguel Gomez</td><td class="date">Apr 13, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/CUEXBGEB8J25O6LQFR40" target="_blank">ECO-007987</a></td><td>R2-B3/B4: Update Cable Tie Quantity</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Mangen</td><td class="date">Apr 13, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/M4O7LQOLITCFYGV0O1O5" target="_blank">ECO-007990</a></td><td>H5x: Add 3d Drawings to Mechanical Assembly Drawings</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Mangen</td><td class="date">Apr 10, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/7P9S6B963EX0J1GL9I0X" target="_blank">ECO-007992</a></td><td>X2c: P-Stand Protective Film Update</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Stofleth</td><td class="date">Apr 13, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRADWETYMVRT" target="_blank">ECO-007994</a></td><td>$tags: PD Drawing Updates</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Mangen</td><td class="date">Apr 13, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ASCV9EC96H03M4JOCJ1D" target="_blank">ECO-007995</a></td><td>R12d: Test Script Updates - Adjust Limits for EC10015 Failure Spike</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Stofleth</td><td class="date">Apr 10, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PSBT8D15FM" target="_blank">DEV-000655</a></td><td>W3 PVT PKG: Shipper Box Sealing Label roll-in from M-LAB-0778 (5K) to M-LAB-0636</td><td><span class="cat cat-dev">DEV</span></td><td class="creator">Matt Mangen</td><td class="date">Apr 10, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL47Q8NSGJAJ" target="_blank">ECO-007997</a></td><td>T2b: PRV4 - SPE Board, Security Cage, MLB Pin Connector Substitute</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 14, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/Q8SBPUSPMXGJ2KZ4SU1V" target="_blank">ECO-007998</a></td><td>B4 MP: 192x ASIC  Hashboard OK2Fab (OK2Fab Approved)</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 13, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/0I2LZ42ZW7QTCU9E24BE" target="_blank">ECO-007999</a></td><td>B4 MP: 128x ASIC Hashboard OK2Fab (OK2Fab Approved)</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 13, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/BTDWAFDA7I14N5KPDFL5" target="_blank">ECO-008000</a></td><td>F1 Proto 1b: 312x ASIC  Hashboard OK2FAB (OK2Fab Approved)</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 11, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/HZJ2GLJGDO7ATBQVJDVU" target="_blank">ECO-008002</a></td><td>B4 MP: Hashboard Production Release and BOM Update</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 15, 2026</td></tr>
+</tbody></table>
+
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x26A0;&#xFE0F;</span>
+    <h2>Active Deviations</h2>
+    <span class="badge ">6 active · 0 expiring soon</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Status</th><th>Created By</th><th>Expiration</th><th>Days Left</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/DVFYCHFC9K36P7MRL0E2" target="_blank">DEV-000651</a></td><td>T3: Waive 9.1K Security Cages for Non-Lethal</td><td><span class="status status-effective">Effective</span></td><td class="creator">Michael Imperial</td><td class="date">May 30, 2026</td><td><span class="expire-ok">45 days</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ2L3IO6FXC" target="_blank">DEV-000638</a></td><td>X2c: Use Underfill M-GLU-0033 (Loctite UF3811) for SPE and MLB Boards</td><td><span class="status status-effective">Effective</span></td><td class="creator">Matt Stofleth</td><td class="date">Jun 30, 2026</td><td><span class="expire-ok">76 days</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ2L3INEEU1" target="_blank">DEV-000653</a></td><td>W3 PVT: Chassis input roll-in from CNC (M-FMT-0540) to die casting (M-FMT-0549)</td><td><span class="status status-effective">Effective</span></td><td class="creator">Matt Mangen</td><td class="date">Jun 30, 2026</td><td><span class="expire-ok">76 days</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/YG0JX20XU5ORAS7C57KD" target="_blank">DEV-000652</a></td><td>W3 PVT: Allow roll-in change to ESD boards for US SKUs</td><td><span class="status status-effective">Effective</span></td><td class="creator">Matt Mangen</td><td class="date">Jul 31, 2026</td><td><span class="expire-ok">107 days</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PSBT8D15FM" target="_blank">DEV-000655</a></td><td>W3 PVT PKG: Shipper Box Sealing Label roll-in from M-LAB-0778 (5K) to M-LAB-0636</td><td><span class="status status-effective">Effective</span></td><td class="creator">Matt Mangen</td><td class="date">Jul 31, 2026</td><td><span class="expire-ok">107 days</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/6O8R5A852DWZI0FM6MNO" target="_blank">DEV-000632</a></td><td>X2c PVT: Input 53k MLB with JTAG lines (E-PCB-0776-07-04)</td><td><span class="status status-effective">Effective</span></td><td class="creator">Matt Stofleth</td><td class="date">Sep 1, 2026</td><td><span class="expire-ok">139 days</span></td></tr>
+</tbody></table>
+
+  <div class="note">Sorted by expiration date. Red = &lt;10 days (urgent), amber = 10–30 days (warning), green = &gt;30 days.</div>
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F550;</span>
+    <h2>Still Pending Approval</h2>
+    <span class="badge">Submitted &gt; 7 days ago</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Submitted</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/BTDWAFDA7I14N5KPFY5O" target="_blank">ECO-007983</a></td><td>K1a EVT: Update MLB M-MCO-0060 Drawing</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 3, 2026</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/5N7Q49741CVYHZEJ8KSS" target="_blank">ECO-007988</a></td><td>S3b: ORT Plan Update</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Stofleth</td><td class="date">Apr 7, 2026</td></tr>
+</tbody></table>
+
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F4E6;</span>
+    <h2>Items Created This Week</h2>
+    <span class="badge">50 items</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Name</th><th>Category</th><th>Created By</th><th>Created</th><th>Phase</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1AQBM" target="_blank">D-SPC-1482</a></td><td>Specification, Conformal Coating, Sensor Board, K1a</td><td><span class="cat cat-other" style="font-size:.7rem">Specification</span></td><td class="creator">Ryker Marsh</td><td class="date">Apr 8, 2026</td><td class="date">Unreleased</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E6M1PPR" target="_blank">E-ASC-3105C05</a></td><td>IC, Block BTC Mining ASIC, V5, C05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZZ7" target="_blank">E-ASC-3105C04</a></td><td>IC, Block BTC Mining ASIC, V5, C04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VBQEDX" target="_blank">E-ASC-3105D04</a></td><td>IC, Block BTC Mining ASIC, V5, D04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZX5" target="_blank">E-ASC-3105J04</a></td><td>IC, Block BTC Mining ASIC, V5, J04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L971" target="_blank">E-ASC-3105J05</a></td><td>IC, Block BTC Mining ASIC, V5, J05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/FXH0EJHEBM5DW91HWKHN" target="_blank">E-ASC-3105J06</a></td><td>IC, Block BTC Mining ASIC, V5, J06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6URI" target="_blank">E-ASC-3105J07</a></td><td>IC, Block BTC Mining ASIC, V5, J07, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E6M1PLN" target="_blank">E-ASC-3105L04</a></td><td>IC, Block BTC Mining ASIC, V5, L04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZV3" target="_blank">E-ASC-3105Q09</a></td><td>IC, Block BTC Mining ASIC, V5, Q09, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L95H" target="_blank">E-ASC-3105L06</a></td><td>IC, Block BTC Mining ASIC, V5, L06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL4CV80GVJFB" target="_blank">E-ASC-3105L07</a></td><td>IC, Block BTC Mining ASIC, V5, L07, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1G4ZK" target="_blank">E-ASC-3105O04</a></td><td>IC, Block BTC Mining ASIC, V5, O04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VBQE95" target="_blank">E-ASC-3105O05</a></td><td>IC, Block BTC Mining ASIC, V5, O05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E6M1PJK" target="_blank">E-ASC-3105O06</a></td><td>IC, Block BTC Mining ASIC, V5, O06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZT1" target="_blank">E-ASC-3105O07</a></td><td>IC, Block BTC Mining ASIC, V5, O07, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6UNW" target="_blank">E-ASC-3105P04</a></td><td>IC, Block BTC Mining ASIC, V5, P04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1G4XI" target="_blank">E-ASC-3105P05</a></td><td>IC, Block BTC Mining ASIC, V5, P05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VBQE73" target="_blank">E-ASC-3105P06</a></td><td>IC, Block BTC Mining ASIC, V5, P06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E6M1PHJ" target="_blank">E-ASC-3105P07</a></td><td>IC, Block BTC Mining ASIC, V5, P07, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZRZ" target="_blank">E-ASC-3105P08</a></td><td>IC, Block BTC Mining ASIC, V5, P08, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L91D" target="_blank">E-ASC-3105P09</a></td><td>IC, Block BTC Mining ASIC, V5, P09, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1G4VY" target="_blank">E-ASC-3105Q04</a></td><td>IC, Block BTC Mining ASIC, V5, Q04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VBQE51" target="_blank">E-ASC-3105Q05</a></td><td>IC, Block BTC Mining ASIC, V5, Q05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/J1L4INLIFQ9H0D5L0OFV" target="_blank">E-ASC-3105Q06</a></td><td>IC, Block BTC Mining ASIC, V5, Q06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZPX" target="_blank">E-ASC-3105Q07</a></td><td>IC, Block BTC Mining ASIC, V5, Q07, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L9ZB" target="_blank">E-ASC-3105Q08</a></td><td>IC, Block BTC Mining ASIC, V5, Q08, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6UJR" target="_blank">E-ASC-3105I05</a></td><td>IC, Block BTC Mining ASIC, V5, I05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1G4TW" target="_blank">E-ASC-3105I04</a></td><td>IC, Block BTC Mining ASIC, V5, I04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/J1L4INLIFQ9H0D5L0ODT" target="_blank">E-ASC-3105E06</a></td><td>IC, Block BTC Mining ASIC, V5, E06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/UCWFTYWTQ1KSBOGWBZNV" target="_blank">E-ASC-3105E05</a></td><td>IC, Block BTC Mining ASIC, V5, E05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L9X9" target="_blank">E-ASC-3105D06</a></td><td>IC, Block BTC Mining ASIC, V5, D06, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL4CV80GVJ7R" target="_blank">E-ASC-3105D05</a></td><td>IC, Block BTC Mining ASIC, V5, D05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6UHQ" target="_blank">E-ASC-3105L05</a></td><td>IC, Block BTC Mining ASIC, V5, L05, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L993" target="_blank">E-ASC-3105C03</a></td><td>IC, Block BTC Mining ASIC, V5, C03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/FXH0EJHEBM5DW91HWKJO" target="_blank">E-ASC-3105B04</a></td><td>IC, Block BTC Mining ASIC, V5, B04, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6UT0" target="_blank">E-ASC-3105B03</a></td><td>IC, Block BTC Mining ASIC, V5, B03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1G43O" target="_blank">E-ASC-3105B02</a></td><td>IC, Block BTC Mining ASIC, V5, B02, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E6M1PNP" target="_blank">E-ASC-3105D03</a></td><td>IC, Block BTC Mining ASIC, V5, D03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1G41M" target="_blank">E-ASC-3105L02</a></td><td>IC, Block BTC Mining ASIC, V5, L02, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VBQEBV" target="_blank">E-ASC-3105L03</a></td><td>IC, Block BTC Mining ASIC, V5, L03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6UPY" target="_blank">E-ASC-3105O03</a></td><td>IC, Block BTC Mining ASIC, V5, O03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/4M6P38630BU2LYQ6L93F" target="_blank">E-ASC-3105P02</a></td><td>IC, Block BTC Mining ASIC, V5, P02, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL4CV80GVJD9" target="_blank">E-ASC-3105P03</a></td><td>IC, Block BTC Mining ASIC, V5, P03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL4CV80GVJB7" target="_blank">E-ASC-3105Q02</a></td><td>IC, Block BTC Mining ASIC, V5, Q02, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/P7RAOTROLWFN6JBR6ULU" target="_blank">E-ASC-3105Q03</a></td><td>IC, Block BTC Mining ASIC, V5, Q03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/EWGZDIGDAL4CV80GVJ9T" target="_blank">E-ASC-3105J03</a></td><td>IC, Block BTC Mining ASIC, V5, J03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ7Q3VBQE3H" target="_blank">E-ASC-3105I03</a></td><td>IC, Block BTC Mining ASIC, V5, I03, MC3</td><td><span class="cat cat-other" style="font-size:.7rem">ASIC</span></td><td class="creator">Brandon Gatlin</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1GC34" target="_blank">M-TAP-0191</a></td><td>Tape, Kapton, Barcode ZIF, K1a</td><td><span class="cat cat-other" style="font-size:.7rem">Tape</span></td><td class="creator">Ryker Marsh</td><td class="date">Apr 8, 2026</td><td class="date">Unreleased</td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/ZH1KY31YV6PXGTL1H61L" target="_blank">M-GLU-0037</a></td><td>Glue, Tacusil UA1008-B</td><td><span class="cat cat-other" style="font-size:.7rem">Glue</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 8, 2026</td><td class="date">In Design</td></tr>
+</tbody></table>
+
+</div>
+
+</div>
+
+<footer>Arena Daily Watcher &bull; Powered by Arena REST API &bull; Refreshed weekdays at 8 AM PT</footer>
 </body>
 </html>

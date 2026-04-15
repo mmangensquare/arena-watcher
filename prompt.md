@@ -5,6 +5,7 @@ Today's date: use the current system date.
 STEP 1 — Fetch data from Arena MCP:
 - Call arena_search_changes with status="SUBMITTED", limit=50
 - Call arena_search_changes with status="SUBMITTED", limit=50, offset=50
+- Fetch ALL items created this week (Monday 00:00:00Z through today 23:59:59Z) by calling arena_search_items with created_after="<MONDAY>T00:00:00Z", created_before="<TODAY>T23:59:59Z", limit=50, offset=0. Keep incrementing offset by 50 and calling again until the result returns fewer than 50 items. Collect all results across pages. Sort them by creationDateTime descending (newest first).
 
 STEP 2 — Classify results (use today's date YYYY-MM-DD for comparisons):
 - submitted_today: submissionDateTime starts with today's date
@@ -32,6 +33,7 @@ STEP 5 — Count stats:
 - stat_week = len(submitted_week) + len(submitted_today)
 - stat_deviations = len(deviations)
 - stat_expiring = count of deviations with days_left <= 14
+- stat_items = total count of items fetched across all pages
 
 STEP 6 — Generate a complete self-contained HTML page and write it to:
 /Users/mmangen/projects/arena-watcher/index.html
@@ -95,7 +97,7 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.78rem;border-top:
 </style>
 </head>
 <body>
-[FILL IN BODY using real data from Steps 1-5 — today's date in header, real counts in stats, real rows in tables, real expiry colors on deviations]
+[FILL IN BODY using real data from Steps 1-5 — today's date in header, real counts in stats, real rows in tables, real expiry colors on deviations. Include an "Items Created This Week" section after the deviations section with a table showing all items (Number, Name, Category, Created By, Created date) sorted newest first. If no items, show an empty state message.]
 </body>
 </html>
 

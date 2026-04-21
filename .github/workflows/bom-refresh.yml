@@ -1,0 +1,36 @@
+name: BK01C-SNAA BOM Refresh
+
+on:
+  schedule:
+    # Daily at 6:05 AM PDT (13:05 UTC)
+    - cron: "5 13 * * *"
+  workflow_dispatch: {}   # allow manual trigger from GitHub UI
+
+jobs:
+  refresh-bom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install requests \
+            google-api-python-client \
+            google-auth-httplib2 \
+            google-auth-oauthlib
+
+      - name: Refresh BOM sheet
+        env:
+          ARENA_EMAIL:           ${{ secrets.ARENA_EMAIL }}
+          ARENA_PASSWORD:        ${{ secrets.ARENA_PASSWORD }}
+          GOOGLE_CLIENT_ID:      ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET:  ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN:  ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        run: python refresh_bom.py

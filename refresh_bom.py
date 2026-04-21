@@ -26,7 +26,8 @@ GOOGLE_REFRESH_TOKEN = os.environ["GOOGLE_REFRESH_TOKEN"]
 SHEET_ID        = "15msF5Ju3B4P6CBJ2O_MEjXrbahTqkgUtihzuKFcE9hk"
 TOP_ITEM_NUMBER = "BK01C-SNAA"
 
-ASSEMBLY_PREFIXES = ("A-",)
+# Prefixes that are known leaf nodes (never have BOM children)
+LEAF_PREFIXES = ("E-", "M-")  # electronics and materials are leaves; A- items recurse
 
 # ---------------------------------------------------------------------------
 # Arena helpers
@@ -55,8 +56,9 @@ def arena_get(session_id, path, params=None):
 # Recursive BOM fetch
 # ---------------------------------------------------------------------------
 
-def is_assembly(number):
-    return any(number.startswith(p) for p in ASSEMBLY_PREFIXES)
+def is_leaf(number):
+    """Items whose number prefix guarantees no BOM children (E- electronics, M- materials)."""
+    return any(number.startswith(p) for p in LEAF_PREFIXES)
 
 
 def fetch_bom_recursive(session_id, item_guid, parent_number, level, rows, visited):
@@ -81,7 +83,7 @@ def fetch_bom_recursive(session_id, item_guid, parent_number, level, rows, visit
         rows.append([level, parent_number, child_num, child_name,
                      child_rev, child_qty, child_ref, child_url])
 
-        if is_assembly(child_num):
+        if not is_leaf(child_num):
             fetch_bom_recursive(
                 session_id, child_guid, child_num, level + 1, rows, visited
             )
@@ -108,7 +110,7 @@ def build_sheets_service():
         token_uri="https://oauth2.googleapis.com/token",
         client_id=GOOGLE_CLIENT_ID,
         client_secret=GOOGLE_CLIENT_SECRET,
-        scopes=["https://www.googleapis.com/auth/spreadsheets"],
+        scopes=["https://www.googleapis.com/auth/drive"],
     )
     creds.refresh(Request())
     return build("sheets", "v4", credentials=creds)

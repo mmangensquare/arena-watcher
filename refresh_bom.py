@@ -73,7 +73,7 @@ def fetch_bom_recursive(session_id, item_guid, parent_number, level, rows, visit
         child_ref  = entry.get("refDes") or ""
         child_url  = child.get("url", {}).get("app", f"https://app.bom.com/{child_guid}")
 
-        rows.append([level, parent_number, child_num, child_name,
+        rows.append([level, child_num, child_name,
                      child_rev, child_qty, child_ref, child_url])
 
         # Always attempt recursion — the BOM call returns empty for leaf parts
@@ -139,7 +139,7 @@ def apply_formatting(sheet_svc, sheet_gid=0):
                     "sheetId": sheet_gid,
                     "dimension": "COLUMNS",
                     "startIndex": 0,
-                    "endIndex": 8,
+                    "endIndex": 7,
                 }
             }
         },
@@ -153,7 +153,7 @@ def apply_formatting(sheet_svc, sheet_gid=0):
                         "startRowIndex": 1,
                         "endRowIndex": 5000,
                         "startColumnIndex": 0,
-                        "endColumnIndex": 8,
+                        "endColumnIndex": 7,
                     }],
                     "booleanRule": {
                         "condition": {
@@ -196,7 +196,7 @@ def main():
     print(f"Found: {TOP_ITEM_NUMBER} — {top_name} (rev {top_rev})")
 
     # 3. Recursive BOM fetch
-    rows    = [[0, "", TOP_ITEM_NUMBER, top_name, top_rev, 1, "", top_url]]
+    rows    = [[0, TOP_ITEM_NUMBER, top_name, top_rev, 1, "", top_url]]
     visited = set()
     fetch_bom_recursive(session_id, top_guid, TOP_ITEM_NUMBER, 1, rows, visited)
     print(f"BOM complete: {len(rows)} rows, {max(r[0] for r in rows) + 1} levels")
@@ -206,7 +206,7 @@ def main():
     svc   = build_sheets_service()
     sheet = svc.spreadsheets()
 
-    header   = [["Level", "Parent Number", "Item Number", "Item Name",
+    header   = [["Level", "Item Number", "Item Name",
                   "Revision", "Quantity", "Ref Des", "Arena Link"]]
     all_rows = header + rows
 
@@ -222,7 +222,7 @@ def main():
     ).execute()
     # Suppress errors if no rules exist — just clear and write
     sheet.values().clear(
-        spreadsheetId=SHEET_ID, range="Sheet1!A1:H5000"
+        spreadsheetId=SHEET_ID, range="Sheet1!A1:G5000"
     ).execute()
     sheet.values().update(
         spreadsheetId=SHEET_ID,

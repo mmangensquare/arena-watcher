@@ -5,6 +5,8 @@ on:
     # Weekdays at 8:05 AM PDT (15:05 UTC in summer / 16:05 UTC in winter)
     # Using 15:05 UTC — runs at 8:05 AM PDT, 7:05 AM PST
     - cron: "5 15 * * 1-5"
+    # Weekdays at 12:05 PM PST (20:05 UTC) — runs at 12:05 PM PST, 1:05 PM PDT
+    - cron: "5 20 * * 1-5"
   workflow_dispatch: {}   # allow manual trigger from GitHub UI
 
 permissions:

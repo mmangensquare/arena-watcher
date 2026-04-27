@@ -55,185 +55,94 @@ footer{text-align:center;padding:20px;color:#94a3b8;font-size:.78rem;border-top:
 </style>
 </head>
 <body>
-
 <div class="topbar">
-  <h1>Arena Daily Watcher</h1>
-  <span class="subtitle">Change order activity dashboard</span>
-  <span class="refresh">Updated Mon Apr 20, 2026</span>
+  <div>
+    <h1>&#x1F4E1; Arena Daily Watcher</h1>
+    <div class="subtitle">Change orders &amp; deviation tracking — April 27, 2026</div>
+  </div>
+  <div class="refresh">Updated: <strong>April 27, 2026 at 4:35 PM UTC</strong></div>
 </div>
 
 <div class="container">
 
-  <!-- Stats Row -->
-  <div class="stats-row">
-    <div class="stat blue">
-      <div class="num">1</div>
-      <div class="lbl">Submitted Today</div>
-    </div>
-    <div class="stat green">
-      <div class="num">5</div>
-      <div class="lbl">Submitted This Week</div>
-    </div>
-    <div class="stat amber">
-      <div class="num">1</div>
-      <div class="lbl">Active Deviations</div>
-    </div>
-    <div class="stat red">
-      <div class="num">0</div>
-      <div class="lbl">Expiring Within 14 Days</div>
-    </div>
+<div class="stats-row">
+  <div class="stat blue">
+    <div class="num">1</div>
+    <div class="lbl">Submitted Today</div>
   </div>
+  <div class="stat green">
+    <div class="num">5</div>
+    <div class="lbl">Submitted This Week</div>
+  </div>
+  <div class="stat amber">
+    <div class="num">1</div>
+    <div class="lbl">Active Deviations</div>
+  </div>
+  <div class="stat red">
+    <div class="num">0</div>
+    <div class="lbl">Expiring &lt; 14 Days</div>
+  </div>
+</div>
 
-  <!-- Submitted Today -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">🔴</span>
-      <h2>Submitted Today</h2>
-      <span class="badge hot">1</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Submitted By</th>
-          <th>Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/M4O7LQOLITCFYGV0MSLW" target="_blank">DEV-000656</a></td>
-          <td>T3a: Rework Config 1 Overspray Units (GB Only)</td>
-          <td><span class="cat cat-dev">DEV</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-          <td><span class="date">Apr 20, 2026 18:02</span></td>
-        </tr>
-      </tbody>
-    </table>
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x2705;</span>
+    <h2>Submitted Today</h2>
+    <span class="badge hot">1 change</span>
   </div>
-
-  <!-- Submitted This Week (not today) -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">📋</span>
-      <h2>Submitted This Week</h2>
-      <span class="badge">4</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Submitted By</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/5N7Q49741CVYHZEJ62BC" target="_blank">ECO-008008</a></td>
-          <td>C72: Drawings Updates for Changes to Country of Origin</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="creator">Matt Mangen</span></td>
-          <td><span class="date">Apr 17, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/DVFYCHFC9K36P7MREAAB" target="_blank">ECO-008009</a></td>
-          <td>F1 Proto 1b: 312x ASIC Hashboard OK2FAB (OK2Fab Approved)</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="creator">Brandon Gatlin</span></td>
-          <td><span class="date">Apr 17, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/9RBU8DB85GZ2L3INA4DW" target="_blank">ECO-008010</a></td>
-          <td>K1a EVT: Drawing Releases - Tech-Sun</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-          <td><span class="date">Apr 17, 2026</span></td>
-        </tr>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/N5P8MRPMJUDGZHW1OIIH" target="_blank">ECO-008011</a></td>
-          <td>K1a EVT: Drawing Updates, MGE Cable Assemblies</td>
-          <td><span class="cat cat-eco">ECO</span></td>
-          <td><span class="creator">Michael Imperial</span></td>
-          <td><span class="date">Apr 17, 2026</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pending Old Changes -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">⏳</span>
-      <h2>Pending Old Changes (&gt;7 days)</h2>
-      <span class="badge ok">0</span>
-    </div>
-    <div class="empty">No changes pending longer than 7 days.</div>
-  </div>
-
-  <!-- Deviations -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">⚠️</span>
-      <h2>Active Deviations</h2>
-      <span class="badge ok">1</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Title</th>
-          <th>Submitted By</th>
-          <th>Expires</th>
-          <th>Days Left</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/M4O7LQOLITCFYGV0MSLW" target="_blank">DEV-000656</a></td>
-          <td>T3a: Rework Config 1 Overspray Units (GB Only)</td>
-          <td><span class="creator">Michael Imperial</span></td>
-          <td><span class="date">May 17, 2026</span></td>
-          <td><span class="expire-ok">27 days</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Items Created This Week -->
-  <div class="section">
-    <div class="section-h">
-      <span class="icon">🗂️</span>
-      <h2>Items Created This Week</h2>
-      <span class="badge">1</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Created By</th>
-          <th>Created</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a class="num-link" href="https://app.bom.com/K2M5JOMJGRAI1E67FO1L" target="_blank">M-FMT-0597</a></td>
-          <td>Enclosure, NED, K1a</td>
-          <td><span class="cat cat-other">Fabricated Metal</span></td>
-          <td><span class="creator">—</span></td>
-          <td><span class="date">Apr 20, 2026</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Submitted</th><th>Status</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/FXH0EJHEBM58R9OTEF7I" target="_blank">ECO-008023</a></td><td>K1a Stand: Initial Release of Floor and Counter BOMs for EVT</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 27, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+</tbody></table>
 
 </div>
 
-<footer>Arena Daily Watcher &mdash; Generated Mon Apr 20, 2026 &mdash; 5 submitted changes &bull; 1 active deviation &bull; 1 item created this week</footer>
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F4CB;</span>
+    <h2>Submitted This Week</h2>
+    <span class="badge">4 changes</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Type</th><th>Submitted By</th><th>Submitted</th><th>Status</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/8QAT7CA74FY1K2HM7LCM" target="_blank">ECO-008016</a></td><td>K1a: Document Bundle BOM Release</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 23, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/N5P8MRPMJUDGZHW1MQG7" target="_blank">ECO-008022</a></td><td>T3a: Security Cage Update - PRV3</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Michael Imperial</td><td class="date">Apr 24, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/WEYHV0YVS3MP8Q5AVUSU" target="_blank">DEV-000658</a></td><td>R2 B4: Allow PD Component Deltas for Ops Build</td><td><span class="cat cat-dev">DEV</span></td><td class="creator">Matt Mangen</td><td class="date">Apr 24, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+<tr><td><a class="num-link" href="https://app.bom.com/J1L4INLIFQ9CVDSXID80" target="_blank">ECO-008024</a></td><td>$tags: Initial Release of Test Script</td><td><span class="cat cat-eco">ECO</span></td><td class="creator">Matt Mangen</td><td class="date">Apr 24, 2026</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td></tr>
+</tbody></table>
 
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x26A0;&#xFE0F;</span>
+    <h2>Active Deviations</h2>
+    <span class="badge ok">1 active &middot; 0 expiring soon</span>
+  </div>
+  <table><thead><tr><th>Number</th><th>Title</th><th>Status</th><th>Creator</th><th>Expiration</th><th>Days Left</th></tr></thead><tbody><tr><td><a class="num-link" href="https://app.bom.com/WEYHV0YVS3MP8Q5AVUSU" target="_blank">DEV-000658</a></td><td>R2 B4: Allow PD Component Deltas for Ops Build</td><td><span class="status status-submitted_for_approval">Submitted_For_Approval</span></td><td class="creator">Matt Mangen</td><td class="date">Jun 12, 2026</td><td><span class="expire-ok">46 days</span></td></tr>
+</tbody></table>
+
+  <div class="note">Sorted by expiration date. Red = &lt;7 days (urgent), amber = 7&ndash;14 days (warning), green = &gt;14 days (ok).</div>
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F550;</span>
+    <h2>Still Pending Approval</h2>
+    <span class="badge">Submitted &gt; 7 days ago</span>
+  </div>
+  <div class="empty">No changes pending longer than 7 days</div>
+
+</div>
+
+<div class="section">
+  <div class="section-h">
+    <span class="icon">&#x1F4E6;</span>
+    <h2>Items Created This Week</h2>
+    <span class="badge">0 items</span>
+  </div>
+  <div class="empty">No items created this week (Mon April 27, 2026)</div>
+
+</div>
+
+</div>
+
+<footer>Arena Daily Watcher &bull; April 27, 2026 &bull; Powered by Arena REST API</footer>
 </body>
 </html>

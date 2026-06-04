@@ -1,18 +1,11 @@
 {
-  "today_str": "2026-06-03",
-  "today_label": "Wed Jun 3, 2026",
-  "stat_today": 1,
-  "stat_week": 11,
+  "today_str": "2026-06-04",
+  "today_label": "Thu Jun 4, 2026",
+  "stat_today": 0,
+  "stat_week": 10,
   "stat_devs": 0,
   "stat_expiring": 0,
-  "stat_items": 22,
-  "submitted_today": [
-    {
-      "number": "ECO-008090",
-      "title": "K1a PVT: Front Mic ALS Flex OK2FAB (DFM Review) - Flexium",
-      "url": "https://app.bom.com/2K4N1641Y9SVEWBF7LVJ",
-      "creator": "Emerson Tejada"
-    }
-  ],
+  "stat_items": 28,
+  "submitted_today": [],
   "expiring_soon": []
 }

@@ -256,9 +256,11 @@ def classify(changes: list, effective_devs: list, today: datetime.date) -> dict:
 # HTML builders
 # ---------------------------------------------------------------------------
 
-def h(text: str) -> str:
-    """HTML-escape a string."""
-    return (text
+def h(text) -> str:
+    """HTML-escape a string (None-safe)."""
+    if not text:
+        return ""
+    return (str(text)
             .replace("&", "&amp;")
             .replace("<", "&lt;")
             .replace(">", "&gt;")
@@ -266,8 +268,8 @@ def h(text: str) -> str:
 
 
 def change_row(ch: dict, include_status: bool = True, date_field: str = "submissionDateTime") -> str:
-    number = ch.get("number", "")
-    title = ch.get("title", "") or ""
+    number = ch.get("number") or ""
+    title = ch.get("title") or ""
     url = extract_url(ch.get("url"))
     css_cls, badge = cat_from_number(number)
     cname = creator_name(ch)
@@ -290,8 +292,8 @@ def change_row(ch: dict, include_status: bool = True, date_field: str = "submiss
 
 
 def deviation_row(ch: dict, today: datetime.date) -> str:
-    number = ch.get("number", "")
-    title = ch.get("title", "") or ""
+    number = ch.get("number") or ""
+    title = ch.get("title") or ""
     url = extract_url(ch.get("url"))
     cname = creator_name(ch)
     exp_iso = ch.get("expirationDateTime", "")
@@ -326,8 +328,8 @@ def deviation_row(ch: dict, today: datetime.date) -> str:
 
 
 def item_row(item: dict) -> str:
-    number = item.get("number", "")
-    name = item.get("name", "") or ""
+    number = item.get("number") or ""
+    name = item.get("name") or ""
     cat_name = (item.get("category") or {}).get("name", "")
     phase = (item.get("lifecyclePhase") or {}).get("name", "")
     created = fmt_date(item.get("creationDateTime") or item.get("createdDateTime", ""))
@@ -593,6 +595,88 @@ def build_html(data: dict, items: list, today: datetime.date) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Slack notification
+# ---------------------------------------------------------------------------
+
+SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
+REPORT_URL = "https://mmangensquare.github.io/arena-watcher/"
+
+
+def send_slack_summary(data: dict, items: list, today: datetime.date) -> None:
+    """Post a morning summary to Slack via incoming webhook."""
+    if not SLACK_WEBHOOK_URL:
+        print("SLACK_WEBHOOK_URL not set — skipping Slack notification")
+        return
+
+    stat_today = len(data["submitted_today"])
+    stat_week = len(data["submitted_week"]) + stat_today
+    stat_devs = len(data["deviations"])
+    stat_expiring = sum(
+        1 for d in data["deviations"]
+        if days_left(d.get("expirationDateTime", ""), today) <= 30
+    )
+    stat_items = len(items)
+    effective_this_week = data.get("effective_this_week", [])
+
+    # Build expiring deviations detail
+    expiring_lines = []
+    for d in data["deviations"]:
+        dl = days_left(d.get("expirationDateTime", ""), today)
+        if dl <= 30:
+            number = d.get("number") or "?"
+            title = d.get("title") or ""
+            emoji = "🔴" if dl <= 10 else "🟡"
+            dl_str = "EXPIRED" if dl < 0 else f"{dl}d left"
+            expiring_lines.append(f"{emoji} *{number}* — {title} ({dl_str})")
+
+    # Build submitted today detail
+    today_lines = []
+    for ch in data["submitted_today"][:5]:
+        number = ch.get("number") or "?"
+        title = ch.get("title") or ""
+        today_lines.append(f"• *{number}* — {title}")
+    if len(data["submitted_today"]) > 5:
+        today_lines.append(f"  _…and {len(data['submitted_today']) - 5} more_")
+
+    # Compose message blocks
+    date_str = today.strftime("%A, %B %-d, %Y")
+    header = f"📡 *Arena Daily Watcher* — {date_str}"
+
+    stats_line = (
+        f"*{stat_today}* submitted today · "
+        f"*{stat_week}* this week · "
+        f"*{len(effective_this_week)}* became effective · "
+        f"*{stat_items}* items created"
+    )
+
+    sections = [header, stats_line]
+
+    if expiring_lines:
+        sections.append(f"⚠️ *Deviations expiring soon ({stat_expiring}):*\n" + "\n".join(expiring_lines))
+
+    if today_lines:
+        sections.append(f"🆕 *Submitted today:*\n" + "\n".join(today_lines))
+
+    sections.append(f"<{REPORT_URL}|View full report →>")
+
+    payload = {
+        "blocks": [
+            {"type": "section", "text": {"type": "mrkdwn", "text": s}}
+            for s in sections
+        ]
+    }
+
+    try:
+        resp = httpx.post(SLACK_WEBHOOK_URL, json=payload, timeout=15)
+        if resp.status_code == 200:
+            print("Slack notification sent successfully")
+        else:
+            print(f"Slack webhook returned {resp.status_code}: {resp.text}", file=sys.stderr)
+    except Exception as e:
+        print(f"Slack notification failed: {e}", file=sys.stderr)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -625,6 +709,9 @@ def main() -> None:
         f"{stat_today} submitted today, {stat_week} this week, "
         f"{stat_devs} deviations ({stat_expiring} expiring soon)"
     )
+
+    # Send Slack notification
+    send_slack_summary(data, items, today)
 
 
 if __name__ == "__main__":

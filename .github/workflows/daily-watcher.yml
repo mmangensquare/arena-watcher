@@ -38,11 +38,12 @@ jobs:
       - name: Install dependencies
         run: pip install httpx
 
-      - name: Generate report
+      - name: Generate report and notify Slack
         env:
           ARENA_EMAIL: ${{ secrets.ARENA_EMAIL }}
           ARENA_PASSWORD: ${{ secrets.ARENA_PASSWORD }}
           ARENA_WORKSPACE_ID: ${{ secrets.ARENA_WORKSPACE_ID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python generate_report.py
 
       - name: Setup GitHub Pages
